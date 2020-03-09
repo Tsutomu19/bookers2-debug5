@@ -16,11 +16,22 @@ class Book < ApplicationRecord
         post_comments.where(user_id: user.id).exists?
 	end
 
-	def self.search(search)
-		if search
-			Book.where(['title LIKE ?', "%#{search}%"])
+	def self.search(search_way,search)
+		pp search_way
+		pp search
+		if search_way == 'forward_match'
+			Book.where('title LIKE ?',"#{search}%")
+		elsif search_way == 'backward_match'
+			Book.where('title LIKE ?',"%#{search}")
+		elsif search_way == 'partial_match'
+			Book.where('title LIKE ?',"%#{search}%")
+		elsif search_way == 'perfect_match'
+			Book.where(title: "#{search}")
 		  else
 			Book.all
 		  end
 	  end
 end
+
+
+
