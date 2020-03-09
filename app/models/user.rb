@@ -21,11 +21,17 @@ class User < ApplicationRecord
   validates :introduction,
      length: { maximum: 50, message: 'is too long (maximum is 50 characters)' }
 
-     def self.search(search)
-          if search
-               User.where(['name LIKE ?', "%#{search}%"])
-               else
+     def self.search(search_way,search)
+          if search_way == 'forward_match'
+               User.where('name LIKE ?',"#{search}%")
+          elsif search_way == 'backward_match'
+               User.where('name LIKE ?',"%#{search}")
+          elsif search_way == 'backward_match'
+               User.where('name LIKE ?',"%#{search}%")
+          elsif search_way == 'perfect_match'
+               User.where(name: "#{search}")
+          else
                User.all
-               end
           end
+     end
 end
